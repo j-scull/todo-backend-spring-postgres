@@ -8,13 +8,12 @@ import lombok.Value;
 @Value
 public class TodoRequest {
 
-    @NotNull
-    String title;
+	@NotNull
+	String title;
 
-    boolean completed;
+	boolean completed;
 
-    @NotNull
-    int order;
-
+	@NotNull
+	int order;
 
 }

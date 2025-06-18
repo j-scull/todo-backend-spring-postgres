@@ -9,16 +9,16 @@ import java.net.URI;
 @Builder
 public class TodoResponse {
 
-    private Long id;
+	private Long id;
 
-    private String title;
+	private String title;
 
-    private boolean completed;
+	private boolean completed;
 
-    private int order;
+	private int order;
 
-    private URI uri;
+	private URI uri;
 
-    private String error;
+	private String error;
 
 }

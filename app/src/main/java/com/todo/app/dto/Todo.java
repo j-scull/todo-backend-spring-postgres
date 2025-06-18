@@ -14,12 +14,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Todo {
 
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
-    private String title;
+	private String title;
 
-    private boolean completed;
+	private boolean completed;
 
-    private int order;
+	private int order;
 
 }

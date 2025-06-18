@@ -11,7 +11,10 @@ import java.util.List;
 @Builder
 public class ErrorResponse {
 
-    private HttpStatus status;
-    private String message;
-    private List<String> errors;
+	private HttpStatus status;
+
+	private String message;
+
+	private List<String> errors;
+
 }
