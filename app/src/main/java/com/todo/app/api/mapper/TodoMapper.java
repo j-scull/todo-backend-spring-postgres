@@ -1,11 +1,13 @@
 package com.todo.app.api.mapper;
 
-import com.todo.app.dto.TodoRequest;
-import com.todo.app.dto.TodoResponse;
-import com.todo.app.dto.Todo;
+import com.todo.app.api.TodoController;
+import com.todo.app.api.dto.TodoRequest;
+import com.todo.app.api.dto.TodoResponse;
+import com.todo.app.core.Todo;
 import org.springframework.stereotype.Component;
-
 import java.net.URI;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component
 public class TodoMapper {
@@ -19,7 +21,7 @@ public class TodoMapper {
 			.title(todo.getTitle())
 			.completed(todo.isCompleted())
 			.order(todo.getOrder())
-			.uri(URI.create("/" + todo.getId()))
+			.uri(URI.create(linkTo(TodoController.class).slash(todo.getId()).withSelfRel().getHref()))
 			.build();
 	}
 

@@ -1,6 +1,6 @@
 package com.todo.app.service;
 
-import com.todo.app.dto.Todo;
+import com.todo.app.core.Todo;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package com.todo.app.api.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.todo.app.dto.ErrorResponse;
+import com.todo.app.api.exception.dto.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(exception = NoResourceFoundException.class, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ErrorResponse> handleNotFound(NoResourceFoundException e) {
+	public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException e) {
 		log.warn("Not found: {}", e.getMessage());
 		ErrorResponse errorResponse = ErrorResponse.builder()
 			.statusCode(HttpStatus.NOT_FOUND.value())
@@ -90,7 +90,7 @@ public class GlobalExceptionHandler {
 		log.warn("Media type not acceptable");
 		ErrorResponse errorResponse = ErrorResponse.builder()
 			.statusCode(HttpStatus.NOT_ACCEPTABLE.value())
-			.message("acceptable MIME type:" + MediaType.APPLICATION_JSON_VALUE)
+			.message("acceptable MIME type: " + MediaType.APPLICATION_JSON_VALUE)
 			.errorDetails(List.of())
 			.build();
 		return new ResponseEntity<>(mapper.writeValueAsString(errorResponse), HttpStatus.NOT_ACCEPTABLE);
@@ -116,7 +116,7 @@ public class GlobalExceptionHandler {
 		ErrorResponse errorResponse = ErrorResponse.builder()
 			.statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
 			.message("error occurred")
-			.errorDetails(List.of(e.getLocalizedMessage()))
+			.errorDetails(List.of())
 			.build();
 		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}

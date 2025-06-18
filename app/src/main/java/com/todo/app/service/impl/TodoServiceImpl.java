@@ -1,6 +1,6 @@
 package com.todo.app.service.impl;
 
-import com.todo.app.dto.Todo;
+import com.todo.app.core.Todo;
 import com.todo.app.service.TodoService;
 import org.springframework.stereotype.Service;
 

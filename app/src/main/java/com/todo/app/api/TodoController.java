@@ -1,16 +1,15 @@
 package com.todo.app.api;
 
-import com.todo.app.dto.TodoRequest;
-import com.todo.app.dto.TodoResponse;
+import com.todo.app.api.dto.TodoRequest;
+import com.todo.app.api.dto.TodoResponse;
 import com.todo.app.api.mapper.TodoMapper;
-import com.todo.app.dto.Todo;
+import com.todo.app.core.Todo;
 import com.todo.app.service.TodoService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +29,8 @@ public class TodoController {
 	private final TodoMapper todoMapper;
 
 	@PostMapping
-	public @ResponseStatus(HttpStatus.CREATED) @ResponseBody TodoResponse createTodo(@Valid @RequestBody final TodoRequest newTodo,
-																					 HttpServletRequest request) {
+	public @ResponseStatus(HttpStatus.CREATED) @ResponseBody TodoResponse createTodo(
+			@Valid @RequestBody final TodoRequest newTodo, HttpServletRequest request) {
 		log.info("Creating todo");
 		Todo todo = todoService.createTodo(todoMapper.fromRequest(newTodo));
 		return todoMapper.toResponse(todo);
