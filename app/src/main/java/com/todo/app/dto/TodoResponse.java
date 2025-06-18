@@ -19,6 +19,4 @@ public class TodoResponse {
 
 	private URI uri;
 
-	private String error;
-
 }

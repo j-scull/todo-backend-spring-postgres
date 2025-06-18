@@ -14,6 +14,6 @@ public class TodoRequest {
 	boolean completed;
 
 	@NotNull
-	int order;
+	Integer order;
 
 }

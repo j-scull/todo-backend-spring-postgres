@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Stubbing method calls, logic to be implemented
+ */
 @Service
 public class TodoServiceImpl implements TodoService {
 
@@ -26,7 +29,7 @@ public class TodoServiceImpl implements TodoService {
 	}
 
 	@Override
-	public Todo updateTodo(Todo todo, String id) {
+	public Todo updateTodo(String id, Todo todo) {
 		return new Todo(1L, "test", false, 1);
 	}
 

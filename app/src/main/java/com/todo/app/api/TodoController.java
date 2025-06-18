@@ -6,13 +6,18 @@ import com.todo.app.api.mapper.TodoMapper;
 import com.todo.app.dto.Todo;
 import com.todo.app.service.TodoService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
- * The REST controller for the todo api
+ * The REST controller for the Todo api
  */
 @Slf4j
 @RestController
@@ -24,16 +29,11 @@ public class TodoController {
 
 	private final TodoMapper todoMapper;
 
-	@RequestMapping("/test")
-	public ResponseEntity<String> test() {
-		return ResponseEntity.ok("Hello!");
-	}
-
 	@PostMapping
-	public @ResponseBody TodoResponse createTodo(@RequestBody final TodoRequest todoRequest,
-			HttpServletRequest request) {
-		log.info("creating todo with id");
-		Todo todo = todoService.createTodo(todoMapper.fromRequest(todoRequest));
+	public @ResponseStatus(HttpStatus.CREATED) @ResponseBody TodoResponse createTodo(@Valid @RequestBody final TodoRequest newTodo,
+																					 HttpServletRequest request) {
+		log.info("Creating todo");
+		Todo todo = todoService.createTodo(todoMapper.fromRequest(newTodo));
 		return todoMapper.toResponse(todo);
 	}
 
@@ -41,20 +41,34 @@ public class TodoController {
 	public @ResponseBody TodoResponse getTodo(@PathVariable String id, HttpServletRequest request) {
 		log.info("Get todo with id: {}", id);
 		Todo todo = todoService.getTodo(id);
-		// todo call service to store dto
 		return todoMapper.toResponse(todo);
 	}
 
-	// update a todo
-	// PATH /{id}
+	@GetMapping
+	public @ResponseBody List<TodoResponse> getAllTodos(HttpServletRequest request) {
+		log.info("Get all todos");
+		List<Todo> todos = todoService.getAllTodos();
+		return todos.stream().map(todoMapper::toResponse).collect(Collectors.toList());
+	}
 
-	// get all todos
-	// GET /
+	@PatchMapping("/{id}")
+	public @ResponseBody TodoResponse updateTodo(@PathVariable String id, @RequestBody final TodoRequest todoUpdate,
+			HttpServletRequest request) {
+		log.info("Updating todo with id: {}", id);
+		Todo updatedTodo = todoService.updateTodo(id, todoMapper.fromRequest(todoUpdate));
+		return todoMapper.toResponse(updatedTodo);
+	}
 
-	// DELETE a todo
-	// DELETE /{id}
+	@DeleteMapping("/{id}")
+	public @ResponseStatus(HttpStatus.NO_CONTENT) void deleteTodo(@PathVariable String id) {
+		log.info("Deleting todo with id: {}", id);
+		todoService.deleteTodo(id);
+	}
 
-	// DELETE all todos
-	// DELETE /
+	@DeleteMapping
+	public @ResponseStatus(HttpStatus.NO_CONTENT) void deleteAllTodos() {
+		log.info("Delete all todos");
+		todoService.deleteAllTodos();
+	}
 
 }
