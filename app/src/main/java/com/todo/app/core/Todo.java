@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// todo - consider renaming this class
+
 @Getter
 @Setter
 @AllArgsConstructor
