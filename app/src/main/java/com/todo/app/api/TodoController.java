@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +38,8 @@ public class TodoController {
 	}
 
 	@GetMapping("/{id}")
-	public @ResponseBody TodoResponse getTodo(@PathVariable String id, HttpServletRequest request) {
+	public @ResponseBody TodoResponse getTodo(@PathVariable String id, HttpServletRequest request)
+			throws NoResourceFoundException {
 		log.info("Get todo with id: {}", id);
 		Todo todo = todoService.getTodo(id);
 		return todoMapper.toResponse(todo);
@@ -59,7 +61,8 @@ public class TodoController {
 	}
 
 	@DeleteMapping("/{id}")
-	public @ResponseStatus(HttpStatus.NO_CONTENT) void deleteTodo(@PathVariable String id) {
+	public @ResponseStatus(HttpStatus.NO_CONTENT) void deleteTodo(@PathVariable String id)
+			throws NoResourceFoundException {
 		log.info("Deleting todo with id: {}", id);
 		todoService.deleteTodo(id);
 	}
