@@ -20,3 +20,4 @@ services:
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=todo_db

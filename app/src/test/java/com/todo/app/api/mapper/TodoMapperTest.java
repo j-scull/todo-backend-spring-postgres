@@ -39,7 +39,7 @@ class TodoMapperTest {
 		assertThat(todo).isNotNull();
 		assertThat(todo.getId()).isNull();
 		assertThat(todo.getTitle()).isEqualTo("title");
-		assertThat(todo.isCompleted()).isFalse();
+		assertThat(todo.getCompleted()).isFalse();
 		assertThat(todo.getOrder()).isEqualTo(1L);
 	}
 

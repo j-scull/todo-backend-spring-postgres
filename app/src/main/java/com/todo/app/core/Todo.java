@@ -1,27 +1,28 @@
 package com.todo.app.core;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 // todo - consider renaming this class
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Entity
+@Table(name = "todos")
 public class Todo {
 
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
+	@NonNull
 	private String title;
 
-	private boolean completed;
+	@NonNull
+	private Boolean completed;
 
-	private int order;
+	@NonNull
+	private Integer order;
 
 }

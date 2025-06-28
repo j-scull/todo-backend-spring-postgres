@@ -38,7 +38,7 @@ class TodoControllerTest {
 	@MockitoBean
 	TodoMapper todoMapper;
 
-	private ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Test
 	void createTodo_returnsTodoResponse() throws Exception {

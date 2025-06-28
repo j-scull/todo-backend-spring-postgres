@@ -9,7 +9,7 @@ import java.net.URI;
 @Builder
 public class TodoResponse {
 
-	private Long id;
+	private long id;
 
 	private String title;
 

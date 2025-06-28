@@ -1,7 +1,9 @@
 package com.todo.app.service.impl;
 
 import com.todo.app.core.Todo;
+import com.todo.app.persistence.TodoRepository;
 import com.todo.app.service.TodoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -11,7 +13,10 @@ import java.util.List;
  * Stubbing method calls, logic to be implemented
  */
 @Service
+@RequiredArgsConstructor
 public class TodoServiceImpl implements TodoService {
+
+	private final TodoRepository todoRepository;
 
 	@Override
 	public Todo createTodo(Todo todo) {
