@@ -18,9 +18,9 @@ public class TodoMapper {
 		}
 		return TodoResponse.builder()
 			.id(todo.getId())
-			.title(todo.getTitle())
-			.completed(todo.getCompleted())
-			.order(todo.getOrder())
+			.title(todo.getTodoTitle())
+			.completed(todo.getTodoIsCompleted())
+			.order(todo.getTodoOrder())
 			.uri(URI.create(linkTo(TodoController.class).slash(todo.getId()).withSelfRel().getHref()))
 			.build();
 	}
@@ -29,7 +29,7 @@ public class TodoMapper {
 		if (request == null) {
 			return null;
 		}
-		return new Todo(request.getTitle(), request.isCompleted(), request.getOrder());
+		return new Todo(request.getTitle(), request.getCompleted(), request.getOrder());
 	}
 
 }

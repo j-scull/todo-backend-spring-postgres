@@ -11,7 +11,8 @@ public class TodoRequest {
 	@NotNull
 	String title;
 
-	boolean completed;
+	@NotNull
+	Boolean completed;
 
 	@NotNull
 	Integer order;

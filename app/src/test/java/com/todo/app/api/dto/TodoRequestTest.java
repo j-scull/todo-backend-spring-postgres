@@ -11,7 +11,7 @@ class TodoRequestTest {
 		TodoRequest todoRequest = new TodoRequest("title", false, 1);
 		assertThat(todoRequest).isNotNull();
 		assertThat(todoRequest.getTitle()).isEqualTo("title");
-		assertThat(todoRequest.isCompleted()).isFalse();
+		assertThat(todoRequest.getCompleted()).isFalse();
 		assertThat(todoRequest.getOrder()).isEqualTo(1);
 	}
 

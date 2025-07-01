@@ -38,9 +38,9 @@ class TodoMapperTest {
 		Todo todo = todoMapper.fromRequest(todoRequest);
 		assertThat(todo).isNotNull();
 		assertThat(todo.getId()).isNull();
-		assertThat(todo.getTitle()).isEqualTo("title");
-		assertThat(todo.getCompleted()).isFalse();
-		assertThat(todo.getOrder()).isEqualTo(1L);
+		assertThat(todo.getTodoTitle()).isEqualTo("title");
+		assertThat(todo.getTodoIsCompleted()).isFalse();
+		assertThat(todo.getTodoOrder()).isEqualTo(1L);
 	}
 
 	@Test

@@ -16,6 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.Collections;
@@ -48,6 +49,20 @@ public class GlobalExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(exception = HttpMessageNotReadableException.class, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+		log.warn("Bad request: {}", e.getMessage());
+		ErrorResponse errorResponse = ErrorResponse.builder()
+			.statusCode(HttpStatus.BAD_REQUEST.value())
+			.message("Bad Request")
+			.errorDetails(Collections.singletonList(e.getLocalizedMessage()))
+			.build();
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(exception = MethodArgumentTypeMismatchException.class,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
+			MethodArgumentTypeMismatchException e) {
 		log.warn("Bad request: {}", e.getMessage());
 		ErrorResponse errorResponse = ErrorResponse.builder()
 			.statusCode(HttpStatus.BAD_REQUEST.value())

@@ -18,13 +18,12 @@ public interface TodoService {
 	 * Get a Todo by id
 	 * @param id - the id associated with the Todo
 	 * @return a Todo
-	 * @throws NoResourceFoundException if no Todo matches the provided is
 	 */
-	Todo getTodo(String id) throws NoResourceFoundException;
+	Todo getTodo(long id) throws NoResourceFoundException;
 
 	/**
 	 * Get all Todos
-	 * @return a List of all Todos
+	 * @return an Iterable of all Todos
 	 */
 	List<Todo> getAllTodos();
 
@@ -34,14 +33,13 @@ public interface TodoService {
 	 * @param todo - the updated Todo content
 	 * @return the updated Todo
 	 */
-	Todo updateTodo(String id, Todo todo);
+	Todo updateTodo(long id, Todo todo) throws NoResourceFoundException;
 
 	/**
 	 * Delete a Todo by id
 	 * @param id - the id associated with the Todo
-	 * @throws NoResourceFoundException if no Todo matches the provided is
 	 */
-	void deleteTodo(String id) throws NoResourceFoundException;
+	void deleteTodo(long id) throws NoResourceFoundException;
 
 	/**
 	 * Delete all Todos

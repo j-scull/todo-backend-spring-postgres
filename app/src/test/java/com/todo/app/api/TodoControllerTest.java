@@ -9,9 +9,13 @@ import com.todo.app.core.Todo;
 import com.todo.app.service.TodoService;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +24,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -74,46 +79,23 @@ class TodoControllerTest {
 		verify(todoMapper).toResponse(isA(Todo.class));
 	}
 
-	@Test
-	void createTodo_titleIsNull_returnsBadRequest() throws Exception {
-		TodoRequest request = new TodoRequest(null, false, 1);
+	@ParameterizedTest
+	@MethodSource("provideTodoRequestWithNullField")
+	void createTodo_requiredFieldIsNull_returnsBadRequest(String field, TodoRequest request) throws Exception {
 
 		mockMvc
 			.perform(post("/todos").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isBadRequest())
-			.andExpect(content().json("""
+			.andExpect(content().json(String.format("""
 					 {
 					   "statusCode": 400,
 					   "message": "Bad Request",
 					   "errorDetails": [
-					     "title: must not be null"
+					     "%s: must not be null"
 					   ]
 					 }
-					"""));
-
-		verify(todoMapper, times(0)).fromRequest(isA(TodoRequest.class));
-		verify(todoService, times(0)).createTodo(isA(Todo.class));
-		verify(todoMapper, times(0)).toResponse(isA(Todo.class));
-	}
-
-	@Test
-	void createTodo_orderIsNull_returnsBadRequest() throws Exception {
-		TodoRequest request = new TodoRequest("title", false, null);
-
-		mockMvc
-			.perform(post("/todos").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(request)))
-			.andExpect(status().isBadRequest())
-			.andExpect(content().json("""
-					 {
-					   "statusCode": 400,
-					   "message": "Bad Request",
-					   "errorDetails": [
-					     "order: must not be null"
-					   ]
-					 }
-					"""));
+					""", field)));
 
 		verify(todoMapper, times(0)).fromRequest(isA(TodoRequest.class));
 		verify(todoService, times(0)).createTodo(isA(Todo.class));
@@ -130,37 +112,54 @@ class TodoControllerTest {
 			.order(1)
 			.uri(new URI("/todos/1"))
 			.build();
-		when(todoService.getTodo("1")).thenReturn(todo);
+		when(todoService.getTodo(1L)).thenReturn(todo);
 		when(todoMapper.toResponse(todo)).thenReturn(response);
 
 		mockMvc.perform(get("/todos/1")).andExpect(status().isOk()).andExpect(content().json("""
-				{
-				  "id": 1,
-				  "title": "title",
-				  "completed": false,
-				  "order": 1,
-				  "uri": "/todos/1"
-				}
+					{
+					  "id": 1,
+					  "title": "title",
+					  "completed": false,
+					  "order": 1,
+					  "uri": "/todos/1"
+					}
 				"""));
 
-		verify(todoService).getTodo("1");
+		verify(todoService).getTodo(1L);
 		verify(todoMapper).toResponse(isA(Todo.class));
 	}
 
 	@Test
 	void getTodo_todoDoesNotExist_returnsNotFound() throws Exception {
 
-		when(todoService.getTodo("1")).thenThrow(NoResourceFoundException.class);
+		doThrow(new NoResourceFoundException(HttpMethod.GET, "/todos/1")).when(todoService).getTodo(1L);
 
 		mockMvc.perform(get("/todos/1")).andExpect(status().isNotFound()).andExpect(content().json("""
-				{
-				  "statusCode": 404,
-				  "message": null,
-				  "errorDetails": []
-				}
+					{
+					  "statusCode": 404,
+					  "message": "No static resource /todos/1.",
+					  "errorDetails": []
+					}
 				"""));
 
-		verify(todoService).getTodo("1");
+		verify(todoService).getTodo(1L);
+		verify(todoMapper, times(0)).toResponse(isA(Todo.class));
+	}
+
+	@Test
+	void getTodo_invalidId_returnsBadRequest() throws Exception {
+
+		mockMvc.perform(get("/todos/x"))
+			.andExpect(status().isBadRequest())
+			.andExpect(content()
+				.json("""
+						{
+						  "statusCode": 400,
+						  "message": "Bad Request",
+						  "errorDetails": ["Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'long'; For input string: \\"x\\""]
+						}
+						"""));
+
 		verify(todoMapper, times(0)).toResponse(isA(Todo.class));
 	}
 
@@ -188,22 +187,22 @@ class TodoControllerTest {
 		when(todoMapper.toResponse(todo2)).thenReturn(response2);
 
 		mockMvc.perform(get("/todos")).andExpect(status().isOk()).andExpect(content().json("""
-				[
-					{
-					  "id": 1,
-					  "title": "title",
-					  "completed": false,
-					  "order": 1,
-					  "uri": "/todos/1"
-					},
-					{
-					  "id": 2,
-					  "title": "title",
-					  "completed": false,
-					  "order": 2,
-					  "uri": "/todos/2"
-					}
-				]
+					[
+						{
+						  "id": 1,
+						  "title": "title",
+						  "completed": false,
+						  "order": 1,
+						  "uri": "/todos/1"
+						},
+						{
+						  "id": 2,
+						  "title": "title",
+						  "completed": false,
+						  "order": 2,
+						  "uri": "/todos/2"
+						}
+					]
 				"""));
 
 		verify(todoService).getAllTodos();
@@ -232,7 +231,7 @@ class TodoControllerTest {
 			.uri(new URI("/todos/1"))
 			.build();
 		when(todoMapper.fromRequest(request)).thenReturn(todo);
-		when(todoService.updateTodo("1", todo)).thenReturn(todo);
+		when(todoService.updateTodo(1L, todo)).thenReturn(todo);
 		when(todoMapper.toResponse(todo)).thenReturn(response);
 
 		mockMvc
@@ -249,34 +248,125 @@ class TodoControllerTest {
 					}
 					"""));
 
-		verify(todoMapper).fromRequest(isA(TodoRequest.class));
-		verify(todoService).updateTodo(isA(String.class), isA(Todo.class));
+		verify(todoMapper).fromRequest(request);
+		verify(todoService).updateTodo(1L, todo);
 		verify(todoMapper).toResponse(isA(Todo.class));
 	}
 
 	@Test
+	void updateTodo_invalidId_returnsBadRequest() throws Exception {
+		TodoRequest request = new TodoRequest("title", false, 1);
+
+		mockMvc
+			.perform(patch("/todos/x").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+			.andExpect(status().isBadRequest())
+			.andExpect(content()
+				.json("""
+						{
+						  "statusCode": 400,
+						  "message": "Bad Request",
+						  "errorDetails": ["Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'long'; For input string: \\"x\\""]
+						}
+						"""));
+
+		verify(todoMapper, times(0)).toResponse(isA(Todo.class));
+	}
+
+	@ParameterizedTest
+	@MethodSource("provideTodoRequestWithNullField")
+	void updateTodo_requiredFieldIsNull_returnsBadRequest(String field, TodoRequest request) throws Exception {
+		Todo todo = new Todo(1L, "title", false, 1);
+		TodoResponse response = TodoResponse.builder()
+			.id(1L)
+			.title("title")
+			.completed(false)
+			.order(1)
+			.uri(new URI("/todos/1"))
+			.build();
+		when(todoMapper.fromRequest(request)).thenReturn(todo);
+		when(todoService.updateTodo(1L, todo)).thenReturn(todo);
+		when(todoMapper.toResponse(todo)).thenReturn(response);
+
+		mockMvc
+			.perform(patch("/todos/1").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+			.andExpect(status().isOk())
+			.andExpect(content().json("""
+					{
+					  "id": 1,
+					  "title": "title",
+					  "completed": false,
+					  "order": 1,
+					  "uri": "/todos/1"
+					}
+					"""));
+
+		verify(todoMapper).fromRequest(request);
+		verify(todoService).updateTodo(1L, todo);
+		verify(todoMapper).toResponse(isA(Todo.class));
+	}
+
+	@Test
+	void updateTodo_todoDoesNotExist_returnsNotFound() throws Exception {
+		TodoRequest request = new TodoRequest("title", false, 1);
+		Todo todo = new Todo(1L, "title", false, 1);
+		when(todoMapper.fromRequest(request)).thenReturn(todo);
+		doThrow(new NoResourceFoundException(HttpMethod.PATCH, "/todos/1")).when(todoService).updateTodo(1L, todo);
+
+		mockMvc
+			.perform(patch("/todos/1").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+			.andExpect(status().isNotFound())
+			.andExpect(content().json("""
+						{
+						  "statusCode": 404,
+						  "message": "No static resource /todos/1.",
+						  "errorDetails": []
+						}
+					"""));
+	}
+
+	@Test
 	void deleteTodo_successfulResponse() throws Exception {
-		doNothing().when(todoService).deleteTodo("1");
+		doNothing().when(todoService).deleteTodo(1L);
 
 		mockMvc.perform(delete("/todos/1")).andExpect(status().isNoContent());
 
-		verify(todoService).deleteTodo("1");
+		verify(todoService).deleteTodo(1L);
 	}
 
 	@Test
 	void deleteTodo_todoNotFound_returnsNotFound() throws Exception {
-		doThrow(NoResourceFoundException.class).when(todoService).deleteTodo("1");
+
+		doThrow(new NoResourceFoundException(HttpMethod.DELETE, "/todos/1")).when(todoService).deleteTodo(1L);
 
 		mockMvc.perform(delete("/todos/1")).andExpect(status().isNotFound()).andExpect(content().json("""
-				{
-				  "statusCode": 404,
-				  "message": null,
-				  "errorDetails": []
-				}
+					{
+					  "statusCode": 404,
+					  "message": "No static resource /todos/1.",
+					  "errorDetails": []
+					}
 				"""));
 
-		verify(todoService).deleteTodo("1");
+		verify(todoService).deleteTodo(1L);
+	}
 
+	@Test
+	void deleteTodo_invalidId_returnsBadRequest() throws Exception {
+
+		mockMvc.perform(delete("/todos/x"))
+			.andExpect(status().isBadRequest())
+			.andExpect(content()
+				.json("""
+						{
+						  "statusCode": 400,
+						  "message": "Bad Request",
+						  "errorDetails": ["Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'long'; For input string: \\"x\\""]
+						}
+						"""));
+
+		verify(todoMapper, times(0)).toResponse(isA(Todo.class));
 	}
 
 	@Test
@@ -286,6 +376,12 @@ class TodoControllerTest {
 		mockMvc.perform(delete("/todos")).andExpect(status().isNoContent());
 
 		verify(todoService).deleteAllTodos();
+	}
+
+	private static Stream<Arguments> provideTodoRequestWithNullField() {
+		return Stream.of(Arguments.of("title", new TodoRequest(null, false, 1)),
+				Arguments.of("completed", new TodoRequest("title", null, 1)),
+				Arguments.of("order", new TodoRequest("title", false, null)));
 	}
 
 }

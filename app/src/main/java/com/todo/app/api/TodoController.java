@@ -10,7 +10,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
@@ -21,9 +30,11 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("/todos")
+@RequestMapping(TodoController.BASE_PATH)
 @RequiredArgsConstructor
 public class TodoController {
+
+	public final static String BASE_PATH = "/todos";
 
 	private final TodoService todoService;
 
@@ -38,11 +49,12 @@ public class TodoController {
 	}
 
 	@GetMapping("/{id}")
-	public @ResponseBody TodoResponse getTodo(@PathVariable String id, HttpServletRequest request)
+	public @ResponseBody TodoResponse getTodo(@PathVariable long id, HttpServletRequest request)
 			throws NoResourceFoundException {
 		log.info("Get todo with id: {}", id);
 		Todo todo = todoService.getTodo(id);
 		return todoMapper.toResponse(todo);
+
 	}
 
 	@GetMapping
@@ -53,15 +65,15 @@ public class TodoController {
 	}
 
 	@PatchMapping("/{id}")
-	public @ResponseBody TodoResponse updateTodo(@PathVariable String id, @RequestBody final TodoRequest todoUpdate,
-			HttpServletRequest request) {
+	public @ResponseBody TodoResponse updateTodo(@PathVariable long id, @RequestBody final TodoRequest todoUpdate,
+			HttpServletRequest request) throws NoResourceFoundException {
 		log.info("Updating todo with id: {}", id);
 		Todo updatedTodo = todoService.updateTodo(id, todoMapper.fromRequest(todoUpdate));
 		return todoMapper.toResponse(updatedTodo);
 	}
 
 	@DeleteMapping("/{id}")
-	public @ResponseStatus(HttpStatus.NO_CONTENT) void deleteTodo(@PathVariable String id)
+	public @ResponseStatus(HttpStatus.NO_CONTENT) void deleteTodo(@PathVariable long id)
 			throws NoResourceFoundException {
 		log.info("Deleting todo with id: {}", id);
 		todoService.deleteTodo(id);

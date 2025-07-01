@@ -17,12 +17,12 @@ public class Todo {
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
 	@NonNull
-	private String title;
+	private String todoTitle;
 
 	@NonNull
-	private Boolean completed;
+	private Boolean todoIsCompleted;
 
 	@NonNull
-	private Integer order;
+	private Integer todoOrder;
 
 }
