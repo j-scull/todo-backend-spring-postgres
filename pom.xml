@@ -38,6 +38,24 @@
     <spring.java.format.version>0.0.46</spring.java.format.version>
     <jackson.databind.nullable.version>0.2.6</jackson.databind.nullable.version>
 
+    <!-- for packaging  -->
+    <exec.maven.plugin.version>3.5.1</exec.maven.plugin.version>
+    <maven.assembly.plugin.version>3.7.1</maven.assembly.plugin.version>
+    <maven.resources.plugin.version>3.3.1</maven.resources.plugin.version>
+
+    <!-- Docker  -->
+    <dockerfile.maven.version>1.4.13</dockerfile.maven.version>
+    <docker.image.name>todo/todo-app</docker.image.name>
+    <alpine.version>3.22.0</alpine.version>
+
+    <!-- Docker compose   -->
+    <postgres.db.version>13.1-alpine</postgres.db.version>
+    <postgres.db.port>5432</postgres.db.port>
+    <postgres.db.url>jdbc:postgresql://db:${postgres.db.port}/todo_db</postgres.db.url>
+    <postgres.db.username>admin</postgres.db.username>
+    <postgres.db.password>password</postgres.db.password>
+    <postgres.db.database.name>todo_db</postgres.db.database.name>
+
     <!-- test -->
     <junit.version>5.11.0</junit.version>
 

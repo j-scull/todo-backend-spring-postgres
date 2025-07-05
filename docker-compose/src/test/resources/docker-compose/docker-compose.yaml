@@ -1,23 +1,23 @@
 services:
-#  app:
-#    image: 'docker-spring-boot-postgres:latest'
-#    build:
-#      context: .
-#    container_name: app
-#    depends_on:
-#      - db
-#    environment:
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
-#      - SPRING_DATASOURCE_USERNAME=compose-postgres
-#      - SPRING_DATASOURCE_PASSWORD=compose-postgres
-#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  app:
+    image: '${docker.image.name}:${project.version}'
+    build:
+      context: .
+    container_name: todo-app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=${postgres.db.url}
+      - SPRING_DATASOURCE_USERNAME=${postgres.db.user.name}
+      - SPRING_DATASOURCE_PASSWORD=${postgres.db.password}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
 
   db:
-    image: 'postgres:13.1-alpine'
+    image: 'postgres:${postgres.db.version}'
     container_name: postgres-db
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=todo_db
+      - POSTGRES_USER=${postgres.db.user.name}
+      - POSTGRES_PASSWORD=${postgres.db.password}
+      - POSTGRES_DB=${postgres.db.database.name}
