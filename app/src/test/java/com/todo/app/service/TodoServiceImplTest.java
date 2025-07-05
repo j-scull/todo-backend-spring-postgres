@@ -20,116 +20,115 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TodoServiceImplTest {
 
-    @Mock
-    private TodoRepository todoRepository;
+	@Mock
+	private TodoRepository todoRepository;
 
-    @InjectMocks
-    private TodoServiceImpl todoService;
+	@InjectMocks
+	private TodoServiceImpl todoService;
 
-    @Test
-    void createTodo_todoIsValid_savesTodo() {
-        Todo todo = new Todo("title", false, 1);
-        Todo savedTodo = new Todo(1L,"title", false, 1);
+	@Test
+	void createTodo_todoIsValid_savesTodo() {
+		Todo todo = new Todo("title", false, 1);
+		Todo savedTodo = new Todo(1L, "title", false, 1);
 
-        when(todoRepository.save(todo)).thenReturn(savedTodo);
+		when(todoRepository.save(todo)).thenReturn(savedTodo);
 
-        Todo result = todoService.createTodo(todo);
+		Todo result = todoService.createTodo(todo);
 
-        assertThat(result).isEqualTo(savedTodo);
-    }
+		assertThat(result).isEqualTo(savedTodo);
+	}
 
-    @Test
-    void getTodo_todoExists_returnsTodo() throws NoResourceFoundException {
-        Todo todo = new Todo(1L, "title", false, 1);
+	@Test
+	void getTodo_todoExists_returnsTodo() throws NoResourceFoundException {
+		Todo todo = new Todo(1L, "title", false, 1);
 
-        when(todoRepository.findById(1L)).thenReturn(Optional.of(todo));
+		when(todoRepository.findById(1L)).thenReturn(Optional.of(todo));
 
-        Todo result = todoService.getTodo(1L);
+		Todo result = todoService.getTodo(1L);
 
-        assertThat(result).isEqualTo(todo);
-    }
+		assertThat(result).isEqualTo(todo);
+	}
 
-    @Test
-    void getTodo_todoDoesNotExists_throwsException() {
-        when(todoRepository.findById(1L)).thenReturn(Optional.empty());
+	@Test
+	void getTodo_todoDoesNotExists_throwsException() {
+		when(todoRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(NoResourceFoundException.class, () ->  todoService.getTodo(1L));
-    }
+		assertThrows(NoResourceFoundException.class, () -> todoService.getTodo(1L));
+	}
 
-    @Test
-    void getTodos_todosExist_returnsTodoList() {
-        List<Todo> todoList = List.of(
-                new Todo(1L, "title", false, 1),
-                new Todo(2L, "title", true, 2));
+	@Test
+	void getTodos_todosExist_returnsTodoList() {
+		List<Todo> todoList = List.of(new Todo(1L, "title", false, 1), new Todo(2L, "title", true, 2));
 
-        when(todoRepository.findAll()).thenReturn(todoList);
+		when(todoRepository.findAll()).thenReturn(todoList);
 
-        List<Todo> result = todoService.getAllTodos();
+		List<Todo> result = todoService.getAllTodos();
 
-        assertThat(result).isEqualTo(todoList);
-    }
+		assertThat(result).isEqualTo(todoList);
+	}
 
-    @Test
-    void getTodos_noTodosExist_returnsEmptyList() {
-        when(todoRepository.findAll()).thenReturn(List.of());
+	@Test
+	void getTodos_noTodosExist_returnsEmptyList() {
+		when(todoRepository.findAll()).thenReturn(List.of());
 
-        List<Todo> result = todoService.getAllTodos();
+		List<Todo> result = todoService.getAllTodos();
 
-        assertThat(result).isNotNull();
-        assertThat(result.size()).isEqualTo(0);
-    }
+		assertThat(result).isNotNull();
+		assertThat(result.size()).isEqualTo(0);
+	}
 
-    @Test
-    void updateTodo_todoExists_returnsTodo() throws NoResourceFoundException {
-        Todo oldTodo = new Todo(1L, "title", false, 1);
-        Todo todoUpdate = mock(Todo.class);
-        Todo updatedTodo = new Todo(1L, "title", true, 1);
+	@Test
+	void updateTodo_todoExists_returnsTodo() throws NoResourceFoundException {
+		Todo oldTodo = new Todo(1L, "title", false, 1);
+		Todo todoUpdate = mock(Todo.class);
+		Todo updatedTodo = new Todo(1L, "title", true, 1);
 
-        when(todoRepository.findById(1L)).thenReturn(Optional.of(oldTodo));
-        when(todoRepository.save(todoUpdate)).thenReturn(updatedTodo);
+		when(todoRepository.findById(1L)).thenReturn(Optional.of(oldTodo));
+		when(todoRepository.save(todoUpdate)).thenReturn(updatedTodo);
 
-        Todo result = todoService.updateTodo(1L, todoUpdate);
+		Todo result = todoService.updateTodo(1L, todoUpdate);
 
-        assertThat(result).isEqualTo(updatedTodo);
-        verify(todoUpdate).setId(1L);
-    }
+		assertThat(result).isEqualTo(updatedTodo);
+		verify(todoUpdate).setId(1L);
+	}
 
-    @Test
-    void updateTodo_todoDoesNotExists_throwsException() {
-        Todo todoUpdate = mock(Todo.class);
+	@Test
+	void updateTodo_todoDoesNotExists_throwsException() {
+		Todo todoUpdate = mock(Todo.class);
 
-        when(todoRepository.findById(1L)).thenReturn(Optional.empty());
+		when(todoRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(NoResourceFoundException.class, () -> todoService.updateTodo(1L, todoUpdate));
+		assertThrows(NoResourceFoundException.class, () -> todoService.updateTodo(1L, todoUpdate));
 
-        verifyNoInteractions(todoUpdate);
-    }
+		verifyNoInteractions(todoUpdate);
+	}
 
-    @Test
-    void deleteTodo_todoExists_completesSuccessfully() throws NoResourceFoundException {
-        Todo todo = new Todo(1L, "title", false, 1);
+	@Test
+	void deleteTodo_todoExists_completesSuccessfully() throws NoResourceFoundException {
+		Todo todo = new Todo(1L, "title", false, 1);
 
-        when(todoRepository.findById(1L)).thenReturn(Optional.of(todo));
-        doNothing().when(todoRepository).deleteById(1L);
+		when(todoRepository.findById(1L)).thenReturn(Optional.of(todo));
+		doNothing().when(todoRepository).deleteById(1L);
 
-        todoService.deleteTodo(1L);
+		todoService.deleteTodo(1L);
 
-        verify(todoRepository).deleteById(1L);
-    }
+		verify(todoRepository).deleteById(1L);
+	}
 
-    @Test
-    void deleteTodo_todoDoesNotExists_throwsException() {
-        when(todoRepository.findById(1L)).thenReturn(Optional.empty());
+	@Test
+	void deleteTodo_todoDoesNotExists_throwsException() {
+		when(todoRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(NoResourceFoundException.class, () ->  todoService.deleteTodo(1L));
-    }
+		assertThrows(NoResourceFoundException.class, () -> todoService.deleteTodo(1L));
+	}
 
-    @Test
-    void deleteTodos_todoExists_completesSuccessfully() {
-        doNothing().when(todoRepository).deleteAll();
+	@Test
+	void deleteTodos_todoExists_completesSuccessfully() {
+		doNothing().when(todoRepository).deleteAll();
 
-        todoService.deleteAllTodos();
+		todoService.deleteAllTodos();
 
-        verify(todoRepository).deleteAll();
-    }
+		verify(todoRepository).deleteAll();
+	}
+
 }
