@@ -29,127 +29,74 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>17</maven.compiler.release>
 
-    <spring.boot.version>3.5.0</spring.boot.version>
-    <org.postgresql.version>42.7.7</org.postgresql.version>
     <org.lombok.version>1.18.36</org.lombok.version>
-    <springdoc.openapi.version>2.8.9</springdoc.openapi.version>
-    <mapstruct.version>1.6.3</mapstruct.version>
-    <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
-    <spring.java.format.version>0.0.46</spring.java.format.version>
-    <jackson.databind.nullable.version>0.2.6</jackson.databind.nullable.version>
 
     <!-- for packaging  -->
     <exec.maven.plugin.version>3.5.1</exec.maven.plugin.version>
-    <maven.assembly.plugin.version>3.7.1</maven.assembly.plugin.version>
-    <maven.resources.plugin.version>3.3.1</maven.resources.plugin.version>
 
     <!-- Docker  -->
-    <dockerfile.maven.version>1.4.13</dockerfile.maven.version>
     <docker.image.name>todo/todo-app</docker.image.name>
-    <alpine.version>3.22.0</alpine.version>
-
-    <!-- Docker compose   -->
-    <postgres.db.version>13.1-alpine</postgres.db.version>
-    <postgres.db.port>5432</postgres.db.port>
-    <postgres.db.url>jdbc:postgresql://db:${postgres.db.port}/todo_db</postgres.db.url>
-    <postgres.db.user.name>admin</postgres.db.user.name>
-    <postgres.db.password>password</postgres.db.password>
-    <postgres.db.database.name>todo_db</postgres.db.database.name>
-
-    <!-- test -->
-    <junit.version>5.11.0</junit.version>
 
   </properties>
 
   <dependencyManagement>
     <dependencies>
 
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>42.7.7</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${org.lombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>2.8.9</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>1.6.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.openapitools</groupId>
+        <artifactId>jackson-databind-nullable</artifactId>
+        <version>0.2.6</version>
+      </dependency>
+
       <!-- test -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <scope>test</scope>
+      </dependency>
+
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>${junit.version}</version>
+        <version>5.11.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
 
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>1.19.6</version>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
-
-  <dependencies>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-hateoas</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-webflux</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>${org.postgresql.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>${org.lombok.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>${springdoc.openapi.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.mapstruct</groupId>
-      <artifactId>mapstruct</artifactId>
-      <version>${mapstruct.version}</version>
-    </dependency>
-
-    <!-- test -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- Optionally: parameterized tests support -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.openapitools</groupId>
-      <artifactId>jackson-databind-nullable</artifactId>
-      <version>${jackson.databind.nullable.version}</version>
-    </dependency>
-
-  </dependencies>
 
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
@@ -214,7 +161,7 @@
               <path>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-mapstruct-binding</artifactId>
-                <version>${lombok.mapstruct.binding.version}</version>
+                <version>0.2.0</version>
               </path>
             </annotationProcessorPaths>
           </configuration>
@@ -228,7 +175,7 @@
       <plugin>
         <groupId>io.spring.javaformat</groupId>
         <artifactId>spring-javaformat-maven-plugin</artifactId>
-        <version>${spring.java.format.version}</version>
+        <version>0.0.46</version>
         <executions>
           <execution>
             <phase>validate</phase>

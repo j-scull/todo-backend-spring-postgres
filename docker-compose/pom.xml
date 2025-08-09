@@ -15,6 +15,15 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <postgres.db.version>13.1-alpine</postgres.db.version>
+        <postgres.db.port>5432</postgres.db.port>
+        <postgres.db.url>jdbc:postgresql://db:${postgres.db.port}/todo_db</postgres.db.url>
+        <postgres.db.user.name>admin</postgres.db.user.name>
+        <postgres.db.password>password</postgres.db.password>
+        <postgres.db.database.name>todo_db</postgres.db.database.name>
+    </properties>
+
     <build>
         <plugins>
 
