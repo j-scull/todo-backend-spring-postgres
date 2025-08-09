@@ -1,7 +1,7 @@
 package com.todo.app.service;
 
-import com.todo.app.core.Todo;
-import com.todo.app.persistence.TodoRepository;
+import com.todo.app.core.dto.Todo;
+import com.todo.app.core.persistence.TodoRepository;
 import com.todo.app.service.impl.TodoServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

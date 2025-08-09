@@ -2,7 +2,7 @@ package com.todo.app.api.mapper;
 
 import com.todo.app.api.dto.TodoRequest;
 import com.todo.app.api.dto.TodoResponse;
-import com.todo.app.core.Todo;
+import com.todo.app.core.dto.Todo;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

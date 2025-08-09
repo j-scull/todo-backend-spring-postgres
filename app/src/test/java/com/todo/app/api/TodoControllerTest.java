@@ -5,8 +5,8 @@ import com.todo.app.api.dto.TodoRequest;
 import com.todo.app.api.dto.TodoResponse;
 import com.todo.app.api.exception.GlobalExceptionHandler;
 import com.todo.app.api.mapper.TodoMapper;
-import com.todo.app.core.Todo;
-import com.todo.app.service.TodoService;
+import com.todo.app.core.dto.Todo;
+import com.todo.app.core.service.TodoService;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

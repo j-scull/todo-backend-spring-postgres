@@ -1,4 +1,4 @@
-package com.todo.app.core;
+package com.todo.app.core.dto;
 
 import jakarta.persistence.*;
 import lombok.*;

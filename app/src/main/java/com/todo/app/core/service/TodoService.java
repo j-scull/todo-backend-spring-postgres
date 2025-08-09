@@ -1,6 +1,6 @@
-package com.todo.app.service;
+package com.todo.app.core.service;
 
-import com.todo.app.core.Todo;
+import com.todo.app.core.dto.Todo;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;

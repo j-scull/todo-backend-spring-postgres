@@ -1,9 +1,9 @@
 package com.todo.app.service.impl;
 
 import com.todo.app.api.TodoController;
-import com.todo.app.core.Todo;
-import com.todo.app.persistence.TodoRepository;
-import com.todo.app.service.TodoService;
+import com.todo.app.core.dto.Todo;
+import com.todo.app.core.persistence.TodoRepository;
+import com.todo.app.core.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
