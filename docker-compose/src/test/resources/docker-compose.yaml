@@ -1,0 +1,25 @@
+services:
+  app:
+    image: '@docker.image.name@:@project.version@'
+    build:
+      context: docker-compose
+    container_name: todo-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=@postgres.db.url@
+      - SPRING_DATASOURCE_USERNAME=@postgres.db.user.name@
+      - SPRING_DATASOURCE_PASSWORD=@postgres.db.password@
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+
+  db:
+    image: 'postgres:@postgres.db.version@'
+    container_name: postgres-db
+    ports:
+      - "5432:@postgres.db.port@"
+    environment:
+      - POSTGRES_USER=@postgres.db.user.name@
+      - POSTGRES_PASSWORD=@postgres.db.password@
+      - POSTGRES_DB=@postgres.db.database.name@
