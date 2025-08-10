@@ -37,6 +37,8 @@
     <!-- Docker  -->
     <docker.image.name>todo/todo-app</docker.image.name>
 
+    <testcontainers.version>1.20.6</testcontainers.version>
+
   </properties>
 
   <dependencyManagement>
@@ -91,7 +93,14 @@
       <dependency>
         <groupId>org.testcontainers</groupId>
         <artifactId>postgresql</artifactId>
-        <version>1.19.6</version>
+        <version>${testcontainers.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${testcontainers.version}</version>
         <scope>test</scope>
       </dependency>
 
