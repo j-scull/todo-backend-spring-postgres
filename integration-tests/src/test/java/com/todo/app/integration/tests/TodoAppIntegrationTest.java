@@ -190,9 +190,6 @@ class TodoAppIntegrationTest {
 			.returns(URI.create("http://localhost:" + port + "/todos/" + createResponse.getId()), TodoResponse::getUri);
 	}
 
-	// test delete not found
-	// test delete
-
 	@Test
 	void deleteTodo_todoNotFound_returnsNotFoundException(CapturedOutput output) {
 		assertThrows(WebClientResponseException.NotFound.class, () -> todoControllerApi.deleteTodo(1L).block());
